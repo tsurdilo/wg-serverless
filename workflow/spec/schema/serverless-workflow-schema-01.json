@@ -499,39 +499,27 @@
         },
         "operator": {
           "type": "string",
-          "enum": [
-            "EQ",
-            "LT",
-            "LTEQ",
-            "GT",
-            "GTEQ",
-            "StrEQ",
-            "StrLT",
-            "StrLTEQ",
-            "StrGT",
-            "StrGTEQ"
-          ],
+          "enum": ["Exists", "Equals", "LessThan", "LessThanEquals", "GreaterThan", "GreaterThanEquals"],
           "description": "Specifies how the input data is compared with the values"
         }
-      }
+      },
+      "required": ["path", "value", "operator"]
     },
     "singlechoice": {
       "type": "object",
       "description": "Single Choice",
-      "properties": {
-        "single": {
-          "type": "array",
-          "description": "List of choices",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/defaultchoice"
+      "allOf": [
+        { "$ref": "#/definitions/defaultchoice" },
+        {
+          "properties": {
+            "next-state": {
+              "type": "string",
+              "description": "Specifies the name of the next state to transition to if there is a value match"
+            }
           }
-        },
-        "next-state": {
-          "type": "string",
-          "description": "Specifies the name of the next state to transition to if there is a value match"
         }
-      }
+      ],
+      "required": ["next-state"]
     },
     "andchoice": {
       "type": "object",
@@ -549,7 +537,8 @@
           "type": "string",
           "description": "Specifies the name of the next state to transition to if there is a value match"
         }
-      }
+      },
+      "required": ["next-state"]
     },
     "orchoice": {
       "type": "object",
@@ -567,7 +556,8 @@
           "type": "string",
           "description": "Specifies the name of the next state to transition to if there is a value match"
         }
-      }
+      },
+      "required": ["next-state"]
     },
     "notchoice": {
       "type": "object",
@@ -576,13 +566,14 @@
         "not": {
           "type": "object",
           "$ref": "#/definitions/defaultchoice",
-          "description": "Single Choice"
+          "description": "Not Choice"
         },
         "next-state": {
           "type": "string",
           "description": "Specifies the name of the next state to transition to if there is a value match"
         }
-      }
+      },
+      "required": ["next-state"]
     }
   }
 }

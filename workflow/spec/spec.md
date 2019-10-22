@@ -574,6 +574,10 @@ actions execute, a transition to "next state" happens.
 
 Switch states can be viewed as gateways. They define matching choices which then define which state should be 
 triggered next upon successful match.
+The current definitions of switch state defines multiple "choices". And, Not, and Or choices
+define a single boolean operator which is to be applied to its elements. 
+Multiple or nesting of boolean operators is currently not allowed.
+We will lift this limitation to allow a more flexible approach in the near future.
 
 #### <a name="switch-state-choices"></a>Switch State: Choices
 
@@ -592,8 +596,10 @@ There are found types of choices defined:
 
 | Parameter | Description | Type | Required |
 | --- | --- | --- | --- |
-| single |List of choices | array | yes |
-| next-state |Name of state to transition to if there is valid match(es) | string | yes |
+| path |Path that selects the data input value to be matched | string | yes |
+| value |Matching value | string | yes |
+| operator |Data Input comparator | string | yes |
+| next-state |Name of state to transition to if there is a valid match | string | yes |
 
 <details><summary><strong>Click to view JSON Schema</strong></summary>
 
@@ -602,31 +608,25 @@ There are found types of choices defined:
     "type": "object",
     "description": "Single Choice",
     "properties": {
-        "single": {
-            "type": "array",
-            "description": "List of choices",
-            "items": {
-                "path": {
-                    "type": "string",
-                    "description": "JSON Path that selects the data input value to be matched"
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Matching value"
-                },
-                "operator": {
-                    "type" : "string",
-                    "enum": ["EQ", "LT", "LTEQ", "GT", "GTEQ", "StrEQ", "StrLT", "StrLTEQ", "StrGT", "StrGTEQ"],
-                    "description": "Specifies how data input is compared with the value"
-                }
-            }
+        "path": {
+            "type": "string",
+            "description": "JSON Path that selects the data input value to be matched"
+        },
+        "value": {
+            "type": "string",
+            "description": "Matching value"
+        },
+        "operator": {
+            "type" : "string",  
+            "enum": ["Exists", "Equals", "LessThan", "LessThanEquals", "GreaterThan", "GreaterThanEquals"],
+            "description": "Specifies how data input is compared with the value"
         },
         "next-state": {
             "type": "string",
             "description": "Specifies the name of the next state to transition to if there is a value match"
         }
     },
-    "required": ["single", "next-state"]
+    "required": ["path", "value", "operator", "next-state"]
 }
 ```
 
@@ -637,6 +637,9 @@ There are found types of choices defined:
 | Parameter | Description | Type | Required |
 | --- | --- | --- | --- |
 | and |List of choices | array | yes |
+| path |Path that selects the data input value to be matched | string | yes |
+| value |Matching value | string | yes |
+| operator |Data Input comparator | string | yes |
 | next-state |Name of state to transition to if there is valid match(es) | string | yes |
 
 <details><summary><strong>Click to view JSON Schema</strong></summary>
@@ -660,7 +663,7 @@ There are found types of choices defined:
                 },
                 "operator": {
                     "type" : "string",
-                    "enum": ["EQ", "LT", "LTEQ", "GT", "GTEQ", "StrEQ", "StrLT", "StrLTEQ", "StrGT", "StrGTEQ"],
+                    "enum": ["Exists", "Equals", "LessThan", "LessThanEquals", "GreaterThan", "GreaterThanEquals"],
                     "description": "Specifies how data input is compared with the value"
                 }
             }
@@ -670,7 +673,7 @@ There are found types of choices defined:
             "description": "Specifies the name of the next state to transition to if there is a value match"
         }
     },
-    "required": ["and", "next-state"]
+    "required": ["and", "path", "value", "operator", "next-state"]
 }
 ```
 
@@ -680,7 +683,10 @@ There are found types of choices defined:
 
 | Parameter | Description | Type | Required |
 | --- | --- | --- | --- |
-| not |List of choices | array | yes |
+| not |Choice | object | yes |
+| path |Path that selects the data input value to be matched | string | yes |
+| value |Matching value | string | yes |
+| operator |Data Input comparator | string | yes |
 | next-state |Name of state to transition to if there is valid match(es) | string | yes |
 
 <details><summary><strong>Click to view JSON Schema</strong></summary>
@@ -688,12 +694,11 @@ There are found types of choices defined:
 ```json
 {
     "type": "object",
-    "description": "And Choice",
+    "description": "Not Choice",
     "properties": {
         "not": {
-            "type": "array",
-            "description": "List of choices",
-            "items": {
+            "type": "object",
+            "properties": {
                 "path": {
                     "type": "string",
                     "description": "JSON Path that selects the data input value to be matched"
@@ -704,7 +709,7 @@ There are found types of choices defined:
                 },
                 "operator": {
                     "type" : "string",
-                    "enum": ["EQ", "LT", "LTEQ", "GT", "GTEQ", "StrEQ", "StrLT", "StrLTEQ", "StrGT", "StrGTEQ"],
+                    "enum": ["Exists", "Equals", "LessThan", "LessThanEquals", "GreaterThan", "GreaterThanEquals"],
                     "description": "Specifies how data input is compared with the value"
                 }
             }
@@ -714,7 +719,7 @@ There are found types of choices defined:
             "description": "Specifies the name of the next state to transition to if there is a value match"
         }
     },
-    "required": ["not", "next-state"]
+    "required": ["not", "path", "value", "operator", "next-state"]
 }
 ```
 
@@ -725,6 +730,9 @@ There are found types of choices defined:
 | Parameter | Description |  Type | Required |
 | --- | --- | --- | --- |
 | or |List of choices | array | yes | 
+| path |Path that selects the data input value to be matched | string | yes |
+| value |Matching value | string | yes |
+| operator |Data Input comparator | string | yes |
 | next-state |Name of state to transition to if there is valid match(es) | string | yes |
 
 <details><summary><strong>Click to view JSON Schema</strong></summary>
@@ -732,7 +740,7 @@ There are found types of choices defined:
 ```json
 {
     "type": "object",
-    "description": "And Choice",
+    "description": "Or Choice",
     "properties": {
         "or": {
             "type": "array",
@@ -748,7 +756,7 @@ There are found types of choices defined:
                 },
                 "operator": {
                     "type" : "string",
-                    "enum": ["EQ", "LT", "LTEQ", "GT", "GTEQ", "StrEQ", "StrLT", "StrLTEQ", "StrGT", "StrGTEQ"],
+                    "enum": ["Exists", "Equals", "LessThan", "LessThanEquals", "GreaterThan", "GreaterThanEquals"],
                     "description": "Specifies how data input is compared with the value"
                 }                              
             }
@@ -758,7 +766,7 @@ There are found types of choices defined:
             "description": "Specifies the name of the next state to transition to if there is a value match"
         }
     },
-    "required": ["or", "next-state"]
+    "required": ["or",  "path", "value", "operator", "next-state"]
 }
 ```
 </details>
