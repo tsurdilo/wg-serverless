@@ -458,36 +458,55 @@
           "type": "array",
           "description": "Defines an ordered set of Match Rules against the input data to this state",
           "items": {
-            "type": "object",
-            "anyOf": [
-              {
-                "title": "Single Choice",
-                "$ref": "#/definitions/singlechoice"
-              },
-              {
-                "title": "And Choice",
-                "$ref": "#/definitions/andchoice"
-              },
-              {
-                "title": "Not Choice",
-                "$ref": "#/definitions/notchoice"
-              },
-              {
-                "title": "Or Choice",
-                "$ref": "#/definitions/orchoice"
-              }
-            ]
+            "ref": "#/definitions/choice"
           }
         },
         "default": {
           "type": "string",
           "description": "Specifies the name of the next state if there is no match for any choices value"
         }
-      }
+      },
+      "required": ["name", "type", "choices", "default"]
     },
-    "defaultchoice": {
+    "choice": {
       "type": "object",
-      "description": "Default Choice",
+      "description": "Each choice of a SWITCH state",
+      "allOf": [
+        {"ref": "#/definitions/condition"},
+        {
+          "properties": {
+            "next-state": {
+              "type": "string",
+              "description": "Specifies the name of the next state to transition to if there is a value match"
+            }
+          }
+        }
+      ]
+    },
+    "condition": {
+      "type": "object",
+      "anyOf": [
+        {
+          "title": "Single condition",
+          "$ref": "#/definitions/singlecondition"
+        },
+        {
+          "title": "And condition",
+          "$ref": "#/definitions/andcondition"
+        },
+        {
+          "title": "Not condition",
+          "$ref": "#/definitions/notcondition"
+        },
+        {
+          "title": "Or condition",
+          "$ref": "#/definitions/orcondition"
+        }
+      ]
+    },
+    "singlecondition": {
+      "type": "object",
+      "description": "Single condition",
       "properties": {
         "path": {
           "type": "string",
@@ -505,75 +524,47 @@
       },
       "required": ["path", "value", "operator"]
     },
-    "singlechoice": {
+    "andcondition": {
       "type": "object",
-      "description": "Single Choice",
-      "allOf": [
-        { "$ref": "#/definitions/defaultchoice" },
-        {
-          "properties": {
-            "next-state": {
-              "type": "string",
-              "description": "Specifies the name of the next state to transition to if there is a value match"
-            }
-          }
-        }
-      ],
-      "required": ["next-state"]
-    },
-    "andchoice": {
-      "type": "object",
-      "description": "And Choice",
+      "description": "And condition",
       "properties": {
         "and": {
           "type": "array",
-          "description": "List of choices",
+          "description": "List of conditions",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/defaultchoice"
+            "$ref": "#/definitions/condition"
           }
-        },
-        "next-state": {
-          "type": "string",
-          "description": "Specifies the name of the next state to transition to if there is a value match"
         }
       },
-      "required": ["next-state"]
+      "required": ["and"]
     },
-    "orchoice": {
+    "orcondition": {
       "type": "object",
-      "description": "Or Choice",
+      "description": "Or condition",
       "properties": {
         "or": {
           "type": "array",
-          "description": "List of choices",
+          "description": "List of conditions",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/defaultchoice"
+            "$ref": "#/definitions/condition"
           }
-        },
-        "next-state": {
-          "type": "string",
-          "description": "Specifies the name of the next state to transition to if there is a value match"
         }
       },
-      "required": ["next-state"]
+      "required": ["or"]
     },
-    "notchoice": {
+    "notcondition": {
       "type": "object",
-      "description": "Not Choice",
+      "description": "Not condition",
       "properties": {
         "not": {
           "type": "object",
-          "$ref": "#/definitions/defaultchoice",
-          "description": "Not Choice"
-        },
-        "next-state": {
-          "type": "string",
-          "description": "Specifies the name of the next state to transition to if there is a value match"
+          "$ref": "#/definitions/condition",
+          "description": "Not condition"
         }
       },
-      "required": ["next-state"]
+      "required": ["not"]
     }
   }
 }

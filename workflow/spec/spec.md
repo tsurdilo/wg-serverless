@@ -5,14 +5,14 @@
 Serverless applications are becoming increasingly complex. Nowdays they have to coordinate, manage, and define
 the execution order (steps) for countless functions triggered by as many events.
 
-When we are dealing with large number of functions, managing their execution is not a simpler task. 
-For example we have to coordinate functions and event triggers, orchestrate function execution (sequential,  parallel, 
+When we are dealing with large number of functions, managing their execution is not a simpler task.
+For example we have to coordinate functions and event triggers, orchestrate function execution (sequential,  parallel,
 in branches depending on different event triggers), etc.
 
 Workflows have become key components of serverless applications as they excel at orchestration and coordination
-of their functional flow. 
+of their functional flow.
 
-The goal of the Serverless Workflow sub-group is to come up with a standard way for users to specify their serverless application workflow, as well as help facilitate 
+The goal of the Serverless Workflow sub-group is to come up with a standard way for users to specify their serverless application workflow, as well as help facilitate
 portability of serverless applications across different vendor platforms.
 
 Serverless Workflow is a vendor-neutral and portable specification which meets these goals.
@@ -26,24 +26,27 @@ This document is a working draft.
 - [Introduction](#Introduction)
 - [Use Cases](#Use-Cases)
 - [Specification Details](#Specification-Details)
-    - [Workflow Model](#Workflow-Model)
-    - [Workflow Definition](#Workflow-Definition)
+  - [Workflow Model](#Workflow-Model)
+  - [Workflow Definition](#Workflow-Definition)
 - [Examples](#Examples)
-
 
 ## Introduction
 
 Serverless Workflow can be used to:
 
-* **Orchestrate serverless application logic**: serverless applications are typicall event-driven and can be 
-very hard to manage. Serverless Workflow groups the application events and functions into a coherent unit and 
+- **Orchestrate serverless application logic**: serverless applications are typicall event-driven and can be
+
+very hard to manage. Serverless Workflow groups the application events and functions into a coherent unit and
 simplifies orchestration of the app logic.
-* **Define and coordinate application control flow**: allow the users to define the execution/operation
+
+- **Define and coordinate application control flow**: allow the users to define the execution/operation
 control flow and how/which functions are to be invoked on arrival of events.
-* **Define and manage application data flow**: allows the users to define how data is passed and filtered from incoming events to states, 
+
+- **Define and manage application data flow**: allows the users to define how data is passed and filtered from incoming events to states,
 rom states to functions, from one function to another function, and from one state to another state.
 
 ### Functional Scope
+
 Serverless Workflow allows users to:
 
 1. Define and orchestrate steps/states involved in a serverless application.
@@ -62,31 +65,33 @@ and functions. It specifies the interaction between events, states and functions
 </p>
 
 ## Use Cases
+
 You can find different Serverless Workflow usescases [here](spec-usecases.md)
 
 ## Specification Details
 
-In sections below we describe all each section of the Serverless Workflow in details. We first show properties in table format, 
+In sections below we describe all each section of the Serverless Workflow in details. We first show properties in table format,
 and you can also click on the "Click to view JSON Schema" to see the detailed definision defines with [JSON Schema](https://json-schema.org/).
 
 You can find the entire schema document [here](schema/serverless-workflow-schema-01.json). Please note just like this document, this is also
 work in progress.
 
 ### Workflow Model
+
 Serverless Workflow can be viewed as a collection of states and the transitions and branching between these states.
-Each state could have associated events and/or functions. Serverless Workflow may be invoked from a CLI command or triggered dynamically upon arrival of events from event sources. 
-An event from an event source may also be associated with a specific state within a Serverless Workflow. 
-States within a Serverless Workflow can wait on the arrival of an event or events from one or more event sources before performing their associated action and progressing to the next state. 
+Each state could have associated events and/or functions. Serverless Workflow may be invoked from a CLI command or triggered dynamically upon arrival of events from event sources.
+An event from an event source may also be associated with a specific state within a Serverless Workflow.
+States within a Serverless Workflow can wait on the arrival of an event or events from one or more event sources before performing their associated action and progressing to the next state.
 Additional workflow functionality includes:
 
-* Results from a cloud function can be used to initiate retry operations or determine which function to execute next or which state to transition to.
+- Results from a cloud function can be used to initiate retry operations or determine which function to execute next or which state to transition to.
 
-* Provide a way to filter and transform the JSON event payload as it progresses through the Serverless Workflow.
+- Provide a way to filter and transform the JSON event payload as it progresses through the Serverless Workflow.
 
-* Provide a way for the application developer to specify a unique field in the event that can be used to correlate events from the event sources to the same serverless workflow instance
+- Provide a way for the application developer to specify a unique field in the event that can be used to correlate events from the event sources to the same serverless workflow instance
 
-A Serverless Workflow can be naturally modeled as a state machine. 
-Specification of a workflow is called a workflow template. 
+A Serverless Workflow can be naturally modeled as a state machine.
+Specification of a workflow is called a workflow template.
 Instantiation of the workflow template is called a workflow instance.
 
 Serverless Workflow definition/specification provides following list of states:
@@ -167,7 +172,7 @@ Here we define details of the Serverless Workflow definitions:
 ### Trigger Definition
 
 Triggers define incoming events which can be associated with invocation of one or more states.
-If there are multiple events involved in an application workflow, a correlation-token, which is used to correlate an event with other 
+If there are multiple events involved in an application workflow, a correlation-token, which is used to correlate an event with other
 events for same workflow instance, must be specified in that event trigger.
 
 | Parameter | Description | Type | Required |
@@ -178,7 +183,6 @@ events for same workflow instance, must be specified in that event trigger.
 | correlation-token | path used for event correlation | string | no |
 
 <details><summary><strong>Click to view JSON Schema</strong></summary>
-
 
 ```json
 {
@@ -210,6 +214,7 @@ events for same workflow instance, must be specified in that event trigger.
 ### State Definition
 
 States define building blocks of the Serverless Workflow. The specification defines six different types of states:
+
 - **[Event State](#Event-state)**: Used to wait for events from event sources and
     then to invoke one or more functions to run in sequence or in parallel.
 
@@ -227,7 +232,7 @@ States define building blocks of the Serverless Workflow. The specification defi
     parallel.
 
 - **[End State](#End-State)**: Terminates the workflow with Fail/Success.
-    
+
 We will start defining each individual state:
 
 ### <img src="media/state-icon-small.png" with="30px" height="26px"/>Event State
@@ -238,7 +243,7 @@ We will start defining each individual state:
 | type |start type | string | yes |
 | start |Is this state a start state | boolean | no |
 | [events](#eventstate-eventdef) |Array of event | array | yes |
- 
+
 <details><summary><strong>Click to view JSON Schema</strong></summary>
 <p>
 
@@ -328,9 +333,9 @@ Event state can hold one or more events definitions, so let's define those:
 
 </details>
 
-The event expression attribute is used to associate this event state with one or more trigger events. 
+The event expression attribute is used to associate this event state with one or more trigger events.
 
-Note that each event definition has a "next-state" property, which is used to idetify the state which 
+Note that each event definition has a "next-state" property, which is used to idetify the state which
 should get executed after this event completes (value should be the unique name of a state).
 
 Each event state's event definition includes one or more actions. Let's define these actions now:
@@ -374,7 +379,6 @@ Each event state's event definition includes one or more actions. Let's define t
 
 An action defines a collection of functions that are to be invoked when this action is triggered.
 It also defines a timeout wait period if one is needed, as well as a retry definition, so lets look at those now:
-
 
 #### Function Definition
 
@@ -512,10 +516,9 @@ as well as define parameters (key/value pairs).
 
 </details>
 
-Unlike Event states, Operation states do not wait for an incoming trigger event. When they 
-are invoked, their set of actions are executed in SEQUENTIAL, or PARALALLEL modes. Once these 
+Unlike Event states, Operation states do not wait for an incoming trigger event. When they
+are invoked, their set of actions are executed in SEQUENTIAL, or PARALALLEL modes. Once these
 actions execute, a transition to "next state" happens.
-
 
 ### <img src="media/state-icon-small.png" with="30px" height="26px"/>Switch State
 
@@ -523,7 +526,7 @@ actions execute, a transition to "next state" happens.
 | --- | --- | --- | --- |
 | name |State name | string | yes |
 | type |State type | string | yes |
-| start |Is this event a start | boolean | no | 
+| start |Is this event a start | boolean | no |
 | [choices](#switch-state-choices) |Ordered set of matching rules to determine which state to trigger next | array | yes |
 | default |Name of the next state if there is no match for any choices value | string | yes |
 
@@ -549,17 +552,11 @@ actions execute, a transition to "next state" happens.
             "description": "Is the start event"
         },
         "choices": {
-            "type": "array",
-            "description": "Defines an ordered set of Match Rules against the input data to this state",
-            "items": {
-                "type": "object",
-                "anyOf": [
-                    { "$ref": "#definitions/singlechoice" },
-                    { "$ref": "#definitions/andchoice" },
-                    { "$ref": "#definitions/notchoice" },
-                    { "$ref": "#definitions/orchoice" }
-                ]
-            }
+          "type": "array",
+          "description": "Defines an ordered set of Match Rules against the input data to this state",
+          "items": {
+            "ref": "#/definitions/choice"
+          }
         },
         "default": {
             "type": "string",
@@ -572,203 +569,198 @@ actions execute, a transition to "next state" happens.
 
 </details>
 
-Switch states can be viewed as gateways. They define matching choices which then define which state should be 
+Switch states can be viewed as gateways. They define matching choices which then define which state should be
 triggered next upon successful match.
 The current definitions of switch state defines multiple "choices". And, Not, and Or choices
-define a single boolean operator which is to be applied to its elements. 
+define a single boolean operator which is to be applied to its elements.
 Multiple or nesting of boolean operators is currently not allowed.
 We will lift this limitation to allow a more flexible approach in the near future.
 
 #### <a name="switch-state-choices"></a>Switch State: Choices
 
-Switch states can be viewed as gateways. They define matching choices which then define which state should be 
+Switch states can be viewed as gateways. They define matching choices which then define which state should be
 triggered next upon successful match.
 
-There are found types of choices defined:
-
-* [Single Choice](#switch-state-single-choice)
-* [And Choice](#switch-state-and-choice)
-* [Not Choice](#switch-state-not-choice)
-* [Or Choice](#switch-state-or-choice)
-
-
-##### <a name="switch-state-single-choice"></a>Switch State Choices: Single Choice
-
-| Parameter | Description | Type | Required |
-| --- | --- | --- | --- |
-| path |Path that selects the data input value to be matched | string | yes |
-| value |Matching value | string | yes |
-| operator |Data Input comparator | string | yes |
-| next-state |Name of state to transition to if there is a valid match | string | yes |
+A choice is composed by a `condition` and a `next-state`. If the result of the `condition`
+ is successful, the workflow will transition to the `next-state`.
 
 <details><summary><strong>Click to view JSON Schema</strong></summary>
 
 ```json
 {
     "type": "object",
-    "description": "Single Choice",
+    "description": "Each choice of a SWITCH state",
+    "allOf": [
+        {
+            "ref": "#/definitions/condition"
+        },
+        {
+            "properties": {
+                "next-state": {
+                    "type": "string",
+                    "description": "Specifies the name of the next state to transition to if there is a value match"
+                }
+            }
+        }
+    ]
+}
+```
+
+</details>
+
+#### <a name="switch-state-conditions"></a>Switch State: Conditions
+
+A condition allows to build complex logic for a `choice`
+
+<details><summary><strong>Click to view JSON Schema</strong></summary>
+
+```json
+{
+    "type": "object",
+    "anyOf": [
+        {
+            "title": "Single condition",
+            "$ref": "#/definitions/singlecondition"
+        },
+        {
+            "title": "And condition",
+            "$ref": "#/definitions/andcondition"
+        },
+        {
+            "title": "Not condition",
+            "$ref": "#/definitions/notcondition"
+        },
+        {
+            "title": "Or condition",
+            "$ref": "#/definitions/orcondition"
+        }
+    ]
+}
+```
+
+</details>
+
+There are found types of conditions defined:
+
+- [Single condition](#switch-state-single-condition)
+- [And condition](#switch-state-and-condition)
+- [Not condition](#switch-state-not-condition)
+- [Or condition](#switch-state-or-condition)
+
+##### <a name="switch-state-single-condition"></a>Switch State conditions: Single condition
+
+| Parameter | Description | Type | Required |
+| --- | --- | --- | --- |
+| path |Path that selects the data input value to be matched | string | yes |
+| value |Matching value | string | yes |
+| operator |Data Input comparator | string | yes |
+
+<details><summary><strong>Click to view JSON Schema</strong></summary>
+
+```json
+{
+    "type": "object",
+    "description": "Single condition",
     "properties": {
         "path": {
             "type": "string",
-            "description": "JSON Path that selects the data input value to be matched"
+            "description": "JSON Path that selects the value of the input data to be matched"
         },
         "value": {
             "type": "string",
             "description": "Matching value"
         },
         "operator": {
-            "type" : "string",  
-            "enum": ["Exists", "Equals", "LessThan", "LessThanEquals", "GreaterThan", "GreaterThanEquals"],
-            "description": "Specifies how data input is compared with the value"
-        },
-        "next-state": {
             "type": "string",
-            "description": "Specifies the name of the next state to transition to if there is a value match"
+            "enum": ["Exists", "Equals", "LessThan", "LessThanEquals", "GreaterThan", "GreaterThanEquals"],
+            "description": "Specifies how the input data is compared with the values"
         }
     },
-    "required": ["path", "value", "operator", "next-state"]
+    "required": ["path", "value", "operator"]
 }
 ```
 
 </details>
 
-##### <a name="switch-state-and-choice"></a>Switch State Choices: And Choice
+##### <a name="switch-state-and-condition"></a>Switch State conditions: And condition
 
 | Parameter | Description | Type | Required |
 | --- | --- | --- | --- |
-| and |List of choices | array | yes |
-| path |Path that selects the data input value to be matched | string | yes |
-| value |Matching value | string | yes |
-| operator |Data Input comparator | string | yes |
-| next-state |Name of state to transition to if there is valid match(es) | string | yes |
+| and |List of conditions | array | yes |
 
 <details><summary><strong>Click to view JSON Schema</strong></summary>
 
 ```json
 {
     "type": "object",
-    "description": "And Choice",
+    "description": "And condition",
     "properties": {
         "and": {
             "type": "array",
-            "description": "List of choices",
+            "description": "List of conditions",
             "items": {
-                "path": {
-                    "type": "string",
-                    "description": "JSON Path that selects the data input value to be matched"
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Matching value"
-                },
-                "operator": {
-                    "type" : "string",
-                    "enum": ["Exists", "Equals", "LessThan", "LessThanEquals", "GreaterThan", "GreaterThanEquals"],
-                    "description": "Specifies how data input is compared with the value"
-                }
+                "type": "object",
+                "$ref": "#/definitions/condition"
             }
-        },
-        "next-state": {
-            "type": "string",
-            "description": "Specifies the name of the next state to transition to if there is a value match"
         }
     },
-    "required": ["and", "path", "value", "operator", "next-state"]
+    "required": ["and"]
 }
 ```
 
 </details>
 
-##### <a name="switch-state-not-choice"></a>Switch State Choices: Not Choice
+##### <a name="switch-state-not-condition"></a>Switch State conditions: Not condition
 
 | Parameter | Description | Type | Required |
 | --- | --- | --- | --- |
-| not |Choice | object | yes |
-| path |Path that selects the data input value to be matched | string | yes |
-| value |Matching value | string | yes |
-| operator |Data Input comparator | string | yes |
-| next-state |Name of state to transition to if there is valid match(es) | string | yes |
+| not |condition | object | yes |
 
 <details><summary><strong>Click to view JSON Schema</strong></summary>
 
 ```json
 {
     "type": "object",
-    "description": "Not Choice",
+    "description": "Not condition",
     "properties": {
         "not": {
             "type": "object",
-            "properties": {
-                "path": {
-                    "type": "string",
-                    "description": "JSON Path that selects the data input value to be matched"
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Matching value"
-                },
-                "operator": {
-                    "type" : "string",
-                    "enum": ["Exists", "Equals", "LessThan", "LessThanEquals", "GreaterThan", "GreaterThanEquals"],
-                    "description": "Specifies how data input is compared with the value"
-                }
-            }
-        },
-        "next-state": {
-            "type": "string",
-            "description": "Specifies the name of the next state to transition to if there is a value match"
+            "$ref": "#/definitions/condition",
+            "description": "Not condition"
         }
     },
-    "required": ["not", "path", "value", "operator", "next-state"]
+    "required": ["not"]
 }
 ```
 
 </details>
 
-##### <a name="switch-state-or-choice"></a>Switch State Choices: Or Choice
+##### <a name="switch-state-or-condition"></a>Switch State conditions: Or condition
 
 | Parameter | Description |  Type | Required |
 | --- | --- | --- | --- |
-| or |List of choices | array | yes | 
-| path |Path that selects the data input value to be matched | string | yes |
-| value |Matching value | string | yes |
-| operator |Data Input comparator | string | yes |
-| next-state |Name of state to transition to if there is valid match(es) | string | yes |
+| or |List of conditions | array | yes |
 
 <details><summary><strong>Click to view JSON Schema</strong></summary>
 
 ```json
 {
     "type": "object",
-    "description": "Or Choice",
+    "description": "Or condition",
     "properties": {
         "or": {
             "type": "array",
-            "description": "List of choices",
+            "description": "List of conditions",
             "items": {
-                "path": {
-                    "type": "string",
-                    "description": "JSON Path that selects the data input value to be matched"
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Matching value"
-                },
-                "operator": {
-                    "type" : "string",
-                    "enum": ["Exists", "Equals", "LessThan", "LessThanEquals", "GreaterThan", "GreaterThanEquals"],
-                    "description": "Specifies how data input is compared with the value"
-                }                              
+                "type": "object",
+                "$ref": "#/definitions/condition"
             }
-        },
-        "next-state": {
-            "type": "string",
-            "description": "Specifies the name of the next state to transition to if there is a value match"
         }
     },
-    "required": ["or",  "path", "value", "operator", "next-state"]
+    "required": ["or"]
 }
 ```
+
 </details>
 
 ### <img src="media/state-icon-small.png" with="30px" height="26px"/>Delay State
@@ -821,13 +813,12 @@ There are found types of choices defined:
 
 Delay state simple waits for a certain amount of time before transitioning to a next state.
 
-
 ### <img src="media/state-icon-small.png" with="30px" height="26px"/>Parallel State
 
 | Parameter | Description | Type | Required |
 | --- | --- | --- | --- |
-| name |State name | string | yes | 
-| type |State type | string | yes | 
+| name |State name | string | yes |
+| type |State type | string | yes |
 | start |If this is a start event | boolean | no |
 | [branches](#parallel-state-branch) |List of branches for this parallel state| array | yes |
 | next-state |Name of the next state to transition to after all branches have completed execution | string | yes |
@@ -852,7 +843,7 @@ Delay state simple waits for a certain amount of time before transitioning to a 
             "type": "boolean",
             "default": false,
             "description": "Is the start event"
-        },  
+        },
         "branches": {
             "type": "array",
             "description": "Branch Definitions",
@@ -926,12 +917,12 @@ Let's define a branch now:
 </details>
 
 Each branch receives a copy of the Parallel state's input data.
-Transitions for states within a branch can only be to other states in that branch. 
+Transitions for states within a branch can only be to other states in that branch.
 In addition, states outside a Parallel state cannot transition to a state within a branch of a Parallel state.
-The Parallel state generates an output array in which each element is the output for a branch. 
+The Parallel state generates an output array in which each element is the output for a branch.
 The elements of the output array need not be of the same type.
 
-The "wait-for-completion" property allows the parallel state to manage branch executions. If this flag is set to 
+The "wait-for-completion" property allows the parallel state to manage branch executions. If this flag is set to
 true, the branches parallel parent state must wait for this branch to finish before continuing execution.
 
 ### <img src="media/state-icon-small.png" with="30px" height="26px"/>End State
@@ -970,7 +961,7 @@ true, the branches parallel parent state must wait for this branch to finish bef
 
 </details>
 
-End state defines the ending transition of the workflow. It provides a stats of successful or failed 
+End state defines the ending transition of the workflow. It provides a stats of successful or failed
 workflow execution.
 
 ### Information Passing
@@ -1020,7 +1011,7 @@ There are three kinds of filters
 - State Filter
   - Invoked when data is passed from the previous state to the current state
   - Invoked when data is passed from the current state to the next state
-- Action Filter 
+- Action Filter
   - Invoked when data is passed from the current state to the first action
   - Invoked when data is passed from an action to action
   - Invoked when data is passed from the last action to the current state
@@ -1044,7 +1035,6 @@ Each Filter has three kinds of path filters
 <p align="center">
 <img src="media/filter-parallel.png" with="480px" height="270px" alt="Parallel FilterDiagram"/>
 </p>
-
 
 ## Examples
 
