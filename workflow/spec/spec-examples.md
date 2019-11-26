@@ -24,7 +24,7 @@ used to access and reason over the workflow state.
       {  
          "name":"UpdateArg",
          "type":"OPERATION",
-         "actionMode":"Sequential",
+         "actionMode":"SEQUENTIAL",
          "inputPath":"$.payload",
          "resultPath":"$.ifttt.value1",
          "outputPath":"$.ifttt",
@@ -37,7 +37,7 @@ used to access and reason over the workflow state.
          "name":"SaveResult",
          "type":"OPERATION",
          "end":true,
-         "actionMode":"Sequential",
+         "actionMode":"SEQUENTIAL",
          "actions":[  
             {  
                "function":"save_resut"

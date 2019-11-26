@@ -6,9 +6,7 @@
   "properties": {
     "id": {
       "type": "string",
-      "description": "Workflow unique identifier",
-      "pattern": "$[a-zA-Z0-9\\-\\.]+^",
-      "minLength": 1
+      "description": "Workflow unique identifier"
     },
     "name": {
       "type": "string",
@@ -78,6 +76,14 @@
         ]
       }
     },
+    "onError": {
+      "type": "array",
+      "description": "Workflow runtime error handling definitions",
+      "items": {
+        "type": "object",
+        "$ref": "#/definitions/error"
+      }
+    },
     "extensions": {
       "type": "array",
       "description": "Workflow Extensions",
@@ -94,6 +100,25 @@
     "states"
   ],
   "definitions": {
+    "error": {
+      "type": "object",
+      "properties": {
+        "errorExpression": {
+          "type": "string",
+          "description": "Boolean expression to match one or more errors"
+        },
+        "resultPath": {
+          "type": "string",
+          "description": "Specify result JSON Node of States output as JSONPath. Used to inject error information into state output."
+        },
+        "nextState": {
+          "type": "string",
+          "description": "State to transition to if errors expressed in errorExpression are matched",
+          "minLength": 1
+        }
+      },
+      "required": ["errorExpression", "nextState"]
+    },
     "triggerevent": {
       "type": "object",
       "properties": {
@@ -321,6 +346,14 @@
           "type": "string",
           "description": "Amount of time (ISO 8601 format) to delay"
         },
+        "onError": {
+          "type": "array",
+          "description": "OnError Definition",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/error"
+          }
+        },
         "nextState": {
           "type": "string",
           "description": "State to transition to after all the delay."
@@ -362,8 +395,17 @@
             "type": "object",
             "$ref": "#/definitions/event"
           }
+        },
+        "onError": {
+          "type": "array",
+          "description": "States runtime error handling definitions",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/error"
+          }
         }
-      }
+      },
+      "required": ["name", "type", "events", "filter"]
     },
     "operationstate": {
       "type": "object",
@@ -409,11 +451,20 @@
             "$ref": "#/definitions/action"
           }
         },
+        "onError": {
+          "type": "array",
+          "description": "OnError Definition",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/error"
+          }
+        },
         "nextState": {
           "type": "string",
           "description": "State to transition to after all the actions have been successfully executed"
         }
-      }
+      },
+      "required": ["name", "type", "actionMode", "actions", "filter", "nextState"]
     },
     "parallelstate": {
       "type": "object",
@@ -451,11 +502,20 @@
             "$ref": "#/definitions/branch"
           }
         },
+        "onError": {
+          "type": "array",
+          "description": "OnError Definition",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/error"
+          }
+        },
         "nextState": {
           "type": "string",
           "description": "State to transition to after all branches have completed execution"
         }
-      }
+      },
+      "required": ["name", "type", "branches", "filter", "nextState"]
     },
     "switchstate": {
       "type": "object",
@@ -510,11 +570,20 @@
             ]
           }
         },
+        "onError": {
+          "type": "array",
+          "description": "OnError Definition",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/error"
+          }
+        },
         "default": {
           "type": "string",
           "description": "Specifies the name of the next state if there is no match for any choices value"
         }
-      }
+      },
+      "required": ["name", "type", "choices", "filter", "default"]
     },
     "subflowstate": {
       "type": "object",
@@ -550,6 +619,14 @@
         },
         "filter": {
           "$ref": "#/definitions/filter"
+        },
+        "onError": {
+          "type": "array",
+          "description": "OnError Definition",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/error"
+          }
         },
         "nextState": {
           "type": "string",
