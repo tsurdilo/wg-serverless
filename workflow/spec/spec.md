@@ -1,4 +1,4 @@
-# Serverless Workflow Specification
+# <img src="media/logo-small.png"/> Serverless Workflow Specification
 
 ## Abstract
 
