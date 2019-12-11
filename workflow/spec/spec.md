@@ -1,4 +1,4 @@
-# <div> <img style="vertical-align:middle" src="media/logo-small.png"> <span style="">Serverless Workflow Specification</span></div>
+# <center><img src="media/logo-small-text.png"/></center>
 
 ## Abstract
 
