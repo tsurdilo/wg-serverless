@@ -1,4 +1,4 @@
-# <center><img src="media/logo-small-text.png"/></center>
+<center><img src="media/logo-small-text.png"/></center>
 
 ## Abstract
 
