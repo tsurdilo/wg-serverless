@@ -65,7 +65,6 @@
       "type": "array",
       "description": "State Definitions",
       "items": {
-        "type": "object",
         "anyOf": [
           {
             "title": "Delay State",
@@ -400,7 +399,6 @@
           "type": "array",
           "description": "State Definitions",
           "items": {
-            "type": "object",
             "anyOf": [
               {
                 "title": "Delay State",
@@ -974,7 +972,6 @@
           "type": "array",
           "description": "States to be executed for each of the elements of inputCollection",
           "items": {
-            "type": "object",
             "anyOf": [
               {
                 "title": "Delay State",
